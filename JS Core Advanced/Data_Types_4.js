@@ -1,5 +1,5 @@
 function Data_Types(number){
-    var str = String(number)
+    let str = String(number)
     console.log(str.length)
 }
 
