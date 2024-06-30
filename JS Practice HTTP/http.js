@@ -8,7 +8,6 @@ const BASE_URL = 'http://api.openweathermap.org/data/2.5/weather';
 
 app.use(express.json());
 
-// Middleware для проверки API ключа
 const checkApiKey = (req, res, next) => {
     const apiKey = req.query.appid || req.headers['x-api-key'];
     if (!apiKey || apiKey !== API_KEY) {
@@ -20,7 +19,6 @@ const checkApiKey = (req, res, next) => {
     next();
 };
 
-// Middleware для имитации ограничения запросов
 let requestCount = 0;
 const rateLimiter = (req, res, next) => {
     requestCount++;
@@ -33,7 +31,6 @@ const rateLimiter = (req, res, next) => {
     next();
 };
 
-// 200 OK и обработка различных ошибок
 app.get('/weather', checkApiKey, rateLimiter, async (req, res) => {
     try {
         const { lat, lon, q } = req.query;
@@ -72,7 +69,6 @@ app.get('/weather', checkApiKey, rateLimiter, async (req, res) => {
     }
 });
 
-// Имитация ошибки 400
 app.get('/bad-request', (req, res) => {
     res.status(400).json({
         cod: 400,
@@ -81,7 +77,6 @@ app.get('/bad-request', (req, res) => {
     });
 });
 
-// Обработка несуществующих маршрутов
 app.use((req, res) => {
     res.status(404).json({
         cod: 404,
@@ -89,7 +84,6 @@ app.use((req, res) => {
     });
 });
 
-// Обработчик ошибок
 app.use((error, req, res, next) => {
     console.error(error);
     res.status(500).json({
