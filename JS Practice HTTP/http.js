@@ -3,7 +3,7 @@ const axios = require('axios');
 const app = express();
 const port = 3000;
 
-const API_KEY = '06c9b41810e379a14f5596fa50c8f01c'; // Замените на ваш реальный API ключ
+const API_KEY = '06c9b41810e379a14f5596fa50c8f01c';
 const BASE_URL = 'http://api.openweathermap.org/data/2.5/weather';
 
 app.use(express.json());
