@@ -4,6 +4,9 @@ import {questions} from './questions.js'
 let currentQuestionIndex = 0
 let score = 0
 let timer = 0
+let selectedAnswersCount = 0
+let maxCorrectAnswers = 0
+let allCorrectAnswersSelected = false
 
 function startQuiz() {
     currentQuestionIndex = 0
@@ -17,6 +20,10 @@ function showQuestion() {
     let currentQuestion = questions[currentQuestionIndex]
     let questionNo = currentQuestionIndex + 1
     questionElement.innerHTML = questionNo + ". " + currentQuestion.question
+
+    selectedAnswersCount = 0
+    maxCorrectAnswers = currentQuestion.answer.filter(answer => answer.correct).length
+    allCorrectAnswersSelected = true
 
     currentQuestion.answer.forEach(answer => {
         const button = document.createElement("button")
@@ -41,22 +48,33 @@ function resetState() {
 }
 
 function selectAnswer(e) {
-    clearInterval(timer)
     const selectedButton = e.target
     const isCorrect = selectedButton.dataset.correct === "true"
-    if (isCorrect) {
-        selectedButton.classList.add("correct")
-        score++
-    } else {
-        selectedButton.classList.add("incorrect")
-    }
-    Array.from(answerButtons.children).forEach(button => {
-        if (button.dataset.correct === "true") {
-            button.classList.add("correct")
+
+    if (selectedAnswersCount < maxCorrectAnswers) {
+        if (isCorrect) {
+            selectedButton.classList.add("correct")
+        } else {
+            selectedButton.classList.add("incorrect")
+            allCorrectAnswersSelected = false
         }
-        button.disabled = true
-    });
-    nextButton.style.display = "block"
+        selectedButton.disabled = true
+        selectedAnswersCount++
+
+        if (selectedAnswersCount === maxCorrectAnswers) {
+            clearInterval(timer)
+            if (allCorrectAnswersSelected) {
+                score++;
+            }
+            Array.from(answerButtons.children).forEach(button => {
+                if (button.dataset.correct === "true" && !button.classList.contains("correct")) {
+                    button.classList.add("correct")
+                }
+                button.disabled = true
+            });
+            nextButton.style.display = "block"
+        }
+    }
 }
 
 function showScore() {
