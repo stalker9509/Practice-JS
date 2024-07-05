@@ -15,6 +15,7 @@ function startQuiz() {
     showQuestion()
 }
 
+
 function showQuestion() {
     resetState()
     let currentQuestion = questions[currentQuestionIndex]
